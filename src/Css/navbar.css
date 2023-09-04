@@ -1,0 +1,49 @@
+.navbarClass {
+  font-size: larger;
+  display: flex;
+  margin-top: 0.5%;
+}
+h2 {
+  font-weight: bolder;
+  color: rgb(40, 40, 40);
+}
+.navbar-text {
+  font-weight: 500;
+  color: rgb(40, 40, 40);
+  margin-left: 15%;
+
+  /* Use flex display to enable control over spacing */
+}
+
+#home:hover {
+  color: #0073e6;
+}
+#calendar {
+  padding-left: 30px;
+}
+#calendar:hover {
+  color: #0073e6;
+}
+.custom-hr {
+  border-color: #808080; /* Lighter color for the hr line */
+  border-width: 1px;
+}
+img {
+  flex: 0.1;
+  width: 5%;
+  height: 60px;
+}
+.connect {
+  font-size: larger;
+  display: flex;
+  margin-left: 30%;
+}
+#login {
+  text-decoration: none;
+  margin-right: 5%;
+  margin-top: 2%;
+}
+#sign {
+  margin-left: 7%;
+  height: 70%;
+}
