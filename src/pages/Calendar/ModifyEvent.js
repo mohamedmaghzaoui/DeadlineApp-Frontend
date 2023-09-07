@@ -4,7 +4,7 @@ export const ModifyEvent = (props) => {
   return (
     <div className="overlay">
       <form className="input-form ">
-        <h4>modifier un échéance</h4>
+        <h4>information de l'échéance</h4>
         <FontAwesomeIcon
           onClick={() => props.hide(null)}
           style={{

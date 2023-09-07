@@ -8,13 +8,25 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import { AddEvent } from "./AddEvent";
 import { ModifyEvent } from "./ModifyEvent";
 import "../../Css/calendar.css";
+import { useQuery } from "react-query";
+import axios from "axios";
 const { format } = require("date-fns");
-
+//change the style of the days of the full calendar
 const dayCellContent = (args) => {
   return <div className="days">{args.dayNumberText}</div>;
 };
+//fetch data from api event endpoint
 
 export const MyCalendar = () => {
+  const url = "http://localhost:3001/events";
+  const { data, isLoading, isError } = useQuery(["eventList"], () => {
+    return axios
+      .get(url)
+      .then((res) => res.data)
+      .catch((err) => console.error(err));
+  });
+  console.log(data);
+
   const [showInputForm, setInputForm] = useState(false);
   const [events, setEvents] = useState([
     {
@@ -32,11 +44,10 @@ export const MyCalendar = () => {
   const addEvent = (data) => {
     const newEvent = {
       title: data.title,
-      color: data.backgroundColor,
+      color: data.color,
       start: format(new Date(data.start), "yyyy-MM-dd"),
       end: format(new Date(data.end), "yyyy-MM-dd"),
     };
-    console.log("new event: ", newEvent);
 
     setEvents([...events, newEvent]); // Use functional update
   };

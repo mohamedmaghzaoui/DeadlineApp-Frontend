@@ -3,6 +3,7 @@ import { useForm } from "react-hook-form";
 import { faTimes } from "@fortawesome/free-solid-svg-icons";
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
+import axios from "axios";
 export const AddEvent = (props) => {
   {
     /* validation schema using yup */
@@ -13,17 +14,33 @@ export const AddEvent = (props) => {
     client: yup.string().required("Le client est requis"),
     concernedPerson: yup.string().required("La personne concernée est requise"),
     frequence: yup.string().required("La fréquence est requise"),
-    backgroundColor: yup.string().required("le couleur est requis"),
+    color: yup.string().required("le couleur est requis"),
     start: yup.date().required("La date de début est requise").nullable(),
     end: yup.date().required("La date de fin est requise").nullable(),
   });
+
   const { register, handleSubmit, formState } = useForm({
     resolver: yupResolver(validation),
   });
+  //event api url
+  const url = "http://localhost:3001/events";
+
   const ckeckSubmit = (data) => {
-    console.log(data);
+    //change the data fromat to insert it to mysql
+    const formattedData = {
+      ...data,
+      start: new Date(data.start).toISOString(),
+      end: new Date(data.end).toISOString(),
+    };
+    console.log(formattedData);
     props.add(data);
+    //use axios post request to send data to mysql db
+    axios
+      .post(url, formattedData)
+      .then((res) => console.log("data is sent"))
+      .catch((err) => console.error("an error has occured", err));
   };
+  //html for add event input
   return (
     <div className="overlay">
       <form onSubmit={handleSubmit(ckeckSubmit)} className="input-form ">
@@ -129,7 +146,7 @@ export const AddEvent = (props) => {
               style={{ marginLeft: "5px", backgroundColor: "red" }}
               type="radio"
               value="red"
-              {...register("backgroundColor")} // Unique name attribute for backgroundcolor
+              {...register("color")} // Unique name attribute for backgroundcolor
             />
           </label>
           <label>
@@ -139,7 +156,7 @@ export const AddEvent = (props) => {
               style={{ marginLeft: "7px", backgroundColor: "green" }}
               type="radio"
               value="green"
-              {...register("backgroundColor")} // Unique name attribute for backgroundcolor
+              {...register("color")} // Unique name attribute for backgroundcolor
             />
           </label>
           {/* purple backgroundcolor */}
@@ -149,7 +166,7 @@ export const AddEvent = (props) => {
               style={{ marginLeft: "9px", backgroundColor: "purple" }}
               type="radio"
               value="purple"
-              {...register("backgroundColor")} // Unique name attribute for backgroundcolor
+              {...register("color")} // Unique name attribute for backgroundcolor
             />
           </label>
           {/* royalblue backgroundcolor */}
@@ -162,7 +179,7 @@ export const AddEvent = (props) => {
               }}
               type="radio"
               value="royalblue"
-              {...register("backgroundColor")} // Unique name attribute for backgroundcolor
+              {...register("color")} // Unique name attribute for backgroundcolor
             />
           </label>
           {/* default backgroundcolor */}
@@ -175,7 +192,7 @@ export const AddEvent = (props) => {
               }}
               type="radio"
               value="normal"
-              {...register("backgroundColor")} // Unique name attribute for backgroundcolor
+              {...register("color")} // Unique name attribute for backgroundcolor
             />
           </label>
         </div>
