@@ -1,60 +1,72 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react"; //react imports
+//react full calendar imports
 import FullCalendar from "@fullcalendar/react";
 import dayGridPlugin from "@fullcalendar/daygrid";
 import timeGridPlugin from "@fullcalendar/timegrid";
 import listPlugin from "@fullcalendar/list";
 import frLocale from "@fullcalendar/core/locales/fr";
 import "bootstrap/dist/css/bootstrap.min.css";
+//addEvent and modify Event components
 import { AddEvent } from "./AddEvent";
 import { ModifyEvent } from "./ModifyEvent";
 import "../../Css/calendar.css";
 import { useQuery } from "react-query";
 import axios from "axios";
+import { ref } from "yup";
 const { format } = require("date-fns");
 //change the style of the days of the full calendar
 const dayCellContent = (args) => {
   return <div className="days">{args.dayNumberText}</div>;
 };
-//fetch data from api event endpoint
+//fetch data from api event endpoint using axios
 
 export const MyCalendar = () => {
   const url = "http://localhost:3001/events";
-  const { data, isLoading, isError } = useQuery(["eventList"], () => {
+  const {
+    data: eventList,
+    isLoading,
+    isError,
+    refetch, //used to automaticly fetch data when adding new event
+  } = useQuery(["eventList"], () => {
     return axios
       .get(url)
       .then((res) => res.data)
       .catch((err) => console.error(err));
   });
-  console.log(data);
-
+  //state to show the input for adding and event
   const [showInputForm, setInputForm] = useState(false);
-  const [events, setEvents] = useState([
-    {
-      title: "hello",
-      backgroundColor: "red",
-      start: "2023-09-04",
-      end: "2023-09-04",
-    },
-  ]);
-
+  //state for current events
+  const [events, setEvents] = useState([]);
   const [selectedEvent, setSelectedEvent] = useState(null); // Track the selected event
+  //function for selected event
   const handelClick = (eventInfo) => {
     setSelectedEvent(eventInfo.event); // Set the selected event
   };
-  const addEvent = (data) => {
-    const newEvent = {
-      title: data.title,
-      color: data.color,
-      start: format(new Date(data.start), "yyyy-MM-dd"),
-      end: format(new Date(data.end), "yyyy-MM-dd"),
-    };
+  useEffect(() => {
+    if (eventList) {
+      // Only update events when data is available and there's no error
+      const formattedEventList = eventList.map((event) => ({
+        ...event,
+        start: format(new Date(event.start), "yyyy-MM-dd"),
+        end: format(new Date(event.end), "yyyy-MM-dd"),
+      }));
+      setEvents(formattedEventList);
+    }
+  }, [eventList, isLoading, isError]);
 
-    setEvents([...events, newEvent]); // Use functional update
-  };
+  if (isLoading) {
+    return <h1>Loading...</h1>;
+  }
+
+  // Handle errors
+  if (isError) {
+    return <h1>Error loading data</h1>;
+  }
 
   return (
     <div className="container" style={{ width: "99%", color: "black" }}>
       <br />
+      {/* button to add events */}
       <button
         onClick={() => {
           setInputForm(!showInputForm);
@@ -64,7 +76,8 @@ export const MyCalendar = () => {
       >
         ajouter un échéance
       </button>
-      {showInputForm && <AddEvent add={addEvent} hide={setInputForm} />}
+      {/* when clicked the add event form appear and pass the refrech as props */}
+      {showInputForm && <AddEvent hide={setInputForm} refetch={refetch} />}
 
       <FullCalendar
         plugins={[dayGridPlugin, timeGridPlugin, listPlugin]}
@@ -82,7 +95,9 @@ export const MyCalendar = () => {
         eventClassNames={"events"}
       />
       {console.log(selectedEvent)}
-      {selectedEvent && <ModifyEvent hide={setSelectedEvent} />}
+      {selectedEvent && (
+        <ModifyEvent hide={setSelectedEvent} selectedEvent={selectedEvent} />
+      )}
     </div>
   );
 };

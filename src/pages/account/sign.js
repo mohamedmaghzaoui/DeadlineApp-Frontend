@@ -16,7 +16,6 @@ export const SignIn = () => {
   return (
     <div>
       <h1>sign</h1>
-
       {data.map((event) => {
         return <p>{event.start}</p>;
       })}

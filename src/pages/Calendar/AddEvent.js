@@ -4,6 +4,7 @@ import { faTimes } from "@fortawesome/free-solid-svg-icons";
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
 import axios from "axios";
+setTimeout(() => {}, 2000);
 export const AddEvent = (props) => {
   {
     /* validation schema using yup */
@@ -33,11 +34,13 @@ export const AddEvent = (props) => {
       end: new Date(data.end).toISOString(),
     };
     console.log(formattedData);
-    props.add(data);
+
     //use axios post request to send data to mysql db
     axios
       .post(url, formattedData)
-      .then((res) => console.log("data is sent"))
+      .then((res) => {
+        props.refetch();
+      })
       .catch((err) => console.error("an error has occured", err));
   };
   //html for add event input
@@ -212,7 +215,7 @@ export const AddEvent = (props) => {
             <input className="form-control" type="date" {...register("end")} />
           </span>
           <input type="submit" value={"Ajouter"} className="btn btn-primary" />
-          {/* button to exit*/}
+
           <button onClick={() => props.hide(false)} className="btn btn-danger">
             Fermer
           </button>
