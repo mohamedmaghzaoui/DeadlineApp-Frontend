@@ -20,7 +20,11 @@ export const AddEvent = (props) => {
     end: yup.date().required("La date de fin est requise").nullable(),
   });
 
-  const { register, handleSubmit, formState } = useForm({
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm({
     resolver: yupResolver(validation),
   });
   //event api url
@@ -70,7 +74,12 @@ export const AddEvent = (props) => {
           placeholder="titre"
           {...register("title")}
         />
-        <br />
+
+        {errors.title?.message ? (
+          <span style={{ color: "red" }}>{errors.title.message}</span>
+        ) : (
+          <br />
+        )}
         {/* object input*/}
         <input
           type="text"
@@ -78,8 +87,11 @@ export const AddEvent = (props) => {
           placeholder="objet"
           {...register("object")}
         />
-
-        <br />
+        {errors.object?.message ? (
+          <span style={{ color: "red" }}>{errors.object.message}</span>
+        ) : (
+          <br />
+        )}
         {/* client input*/}
         <input
           type="text"
@@ -87,7 +99,11 @@ export const AddEvent = (props) => {
           placeholder="client"
           {...register("client")}
         />
-        <br />
+        {errors.client?.message ? (
+          <span style={{ color: "red" }}>{errors.client.message}</span>
+        ) : (
+          <br />
+        )}
         {/* concerned person input*/}
         <input
           type="text"
@@ -95,7 +111,11 @@ export const AddEvent = (props) => {
           placeholder="Personne Concerné"
           {...register("concernedPerson")}
         />
-        <br />
+        {errors.concernedPerson?.message ? (
+          <span style={{ color: "red" }}>{errors.concernedPerson.message}</span>
+        ) : (
+          <br />
+        )}
         {/* frequence inputs in radio */}
         <div className="frequence" style={{ display: "flex" }}>
           <label>Frequence</label>
@@ -138,6 +158,11 @@ export const AddEvent = (props) => {
             Hebdo
           </label>
         </div>
+        {errors.frequence?.message ? (
+          <span style={{ color: "red" }}>{errors.frequence.message}</span>
+        ) : (
+          <br />
+        )}
         {/* backgroundcolors inputs in radio */}
         <div className="frequence" style={{ display: "flex" }}>
           <label>Couleur</label>
@@ -198,22 +223,53 @@ export const AddEvent = (props) => {
               {...register("color")} // Unique name attribute for backgroundcolor
             />
           </label>
+          {errors.color?.message ? (
+            <span style={{ color: "red", marginLeft: "4%" }}>
+              {errors.color.message}
+            </span>
+          ) : (
+            <br />
+          )}
         </div>
 
         {/* start and end date inputs*/}
         <label>
           <span>
-            Commence
+            Commencé
             <input
               className="form-control"
               type="date"
               {...register("start")}
             />
           </span>
+          {errors.start?.message ? (
+            <span
+              style={{
+                color: "red",
+                display: "flex",
+              }}
+            >
+              {"data de debut est requis"}
+            </span>
+          ) : (
+            <br />
+          )}
           <span>
             Termine
             <input className="form-control" type="date" {...register("end")} />
           </span>
+          {errors.end?.message ? (
+            <span
+              style={{
+                color: "red",
+                display: "flex",
+              }}
+            >
+              {"data de  est requis"}
+            </span>
+          ) : (
+            <br />
+          )}
           <input type="submit" value={"Ajouter"} className="btn btn-primary" />
 
           <button onClick={() => props.hide(false)} className="btn btn-danger">
