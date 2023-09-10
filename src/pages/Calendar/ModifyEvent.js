@@ -2,11 +2,27 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTimes } from "@fortawesome/free-solid-svg-icons";
 import { useState } from "react";
+import axios from "axios";
 export const ModifyEvent = (props) => {
   const { title, setTitle } = useState("");
   //get the selected event from calendar.js
   const selectedEvent = props.selectedEvent; //this is only for title and color
   const eventData = props.selectedEvent.extendedprops; //this is for all other attributes
+  console.log(selectedEvent.id);
+  //function to delete an event
+  const deleteEvent = (event) => {
+    //prevent the default behaviour (submission) of the button
+    event.preventDefault();
+    axios
+      //passs the id in url
+      .delete(`http://localhost:3001/events/${selectedEvent.id}`)
+      .then((res) => {
+        console.log("event deleted");
+        props.hide(null);
+        props.refetch();
+      })
+      .catch((err) => console.error(err));
+  };
   return (
     <div className="overlay">
       <form className="input-form ">
@@ -163,7 +179,7 @@ export const ModifyEvent = (props) => {
           </span>
 
           <button className="btn btn-primary">modifier</button>
-          <button onClick={() => props.hide(null)} className="btn btn-danger">
+          <button onClick={deleteEvent} className="btn btn-danger">
             Supprimer
           </button>
         </label>

@@ -4,7 +4,6 @@ import { faTimes } from "@fortawesome/free-solid-svg-icons";
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
 import axios from "axios";
-setTimeout(() => {}, 2000);
 export const AddEvent = (props) => {
   {
     /* validation schema using yup */
@@ -44,6 +43,7 @@ export const AddEvent = (props) => {
       .post(url, formattedData)
       .then((res) => {
         props.refetch();
+        props.hide(false);
       })
       .catch((err) => console.error("an error has occured", err));
   };
