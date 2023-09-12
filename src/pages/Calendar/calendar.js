@@ -45,11 +45,20 @@ export const MyCalendar = () => {
   useEffect(() => {
     if (eventList) {
       // Only update events when data is available and there's no error
-      const formattedEventList = eventList.map((event) => ({
-        ...event,
-        start: format(new Date(event.start), "yyyy-MM-dd"),
-        end: format(new Date(event.end), "yyyy-MM-dd"),
-      }));
+      //change the format of date to work with full calendar
+      const formattedEventList = eventList.map((event) => {
+        const startDate = new Date(event.start);
+        const endDate = new Date(event.end);
+
+        // Add 1 day to the end date to work properly
+        endDate.setDate(endDate.getDate() + 1);
+
+        return {
+          ...event,
+          start: format(startDate, "yyyy-MM-dd"), //new start format
+          end: format(endDate, "yyyy-MM-dd"), //new end format
+        };
+      });
       setEvents(formattedEventList);
     }
   }, [eventList, isLoading, isError]);

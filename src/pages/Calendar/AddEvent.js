@@ -30,18 +30,21 @@ export const AddEvent = (props) => {
   const url = "http://localhost:3001/events";
 
   const ckeckSubmit = (data) => {
+    console.log("data:", data.start);
     //change the data fromat to insert it to mysql
     const formattedData = {
       ...data,
       start: new Date(data.start).toISOString(),
       end: new Date(data.end).toISOString(),
     };
-    console.log(formattedData);
+    console.log("dae", data.start);
+    console.log("formated date", formattedData.start);
 
     //use axios post request to send data to mysql db
     axios
       .post(url, formattedData)
       .then((res) => {
+        console.log("event added");
         props.refetch();
         props.hide(false);
       })
