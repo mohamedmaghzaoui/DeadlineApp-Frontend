@@ -45,6 +45,7 @@ export const ModifyEvent = (props) => {
     eventData.concernedPerson
   );
   const [frequence, setFrequence] = useState(eventData.frequence);
+  const [color, setColor] = useState(selectedEvent.backgroundColor);
   const [start, setStart] = useState(
     format(new Date(selectedEvent.start), "yyyy-MM-dd")
   );
@@ -80,7 +81,8 @@ export const ModifyEvent = (props) => {
   //update the statue once the endDate is cahge
   useEffect(() => {
     updateStatueMessage();
-  }, endDate);
+  }, []);
+  console.log(selectedEvent);
 
   //function to delete an event
   const deleteEvent = (event) => {
@@ -123,7 +125,7 @@ export const ModifyEvent = (props) => {
     setTimeout(() => {
       props.refetch();
       props.hide(null);
-    }, 100);
+    }, 200);
   };
 
   return (
@@ -258,37 +260,43 @@ export const ModifyEvent = (props) => {
           <label>
             {/* red backgroundcolor */}
             <input
-              defaultChecked
+              checked={color === "#ea424b"}
               className="form-check-input"
-              style={{ marginLeft: "5px", backgroundColor: "red" }}
+              style={{ marginLeft: "5px", backgroundColor: "#ea424b" }}
               type="radio"
-              value="red"
+              value="#ea424b"
               {...register("color")} // Unique name attribute for backgroundcolor
+              onChange={(event) => setColor(event.target.value)}
             />
           </label>
           <label>
             {/* green backgroundcolor */}
             <input
+              checked={color === "#109010"}
               className="form-check-input"
-              style={{ marginLeft: "7px", backgroundColor: "green" }}
+              style={{ marginLeft: "7px", backgroundColor: "#109010" }}
               type="radio"
-              value="green"
+              value="#109010"
               {...register("color")} // Unique name attribute for backgroundcolor
+              onChange={(event) => setColor(event.target.value)}
             />
           </label>
           {/* purple backgroundcolor */}
           <label>
             <input
+              checked={color === "#9c51b6"}
               className="form-check-input"
-              style={{ marginLeft: "9px", backgroundColor: "purple" }}
+              style={{ marginLeft: "9px", backgroundColor: "#9c51b6" }}
               type="radio"
-              value="purple"
+              value="#9c51b6"
               {...register("color")} // Unique name attribute for backgroundcolor
+              onChange={(event) => setColor(event.target.value)}
             />
           </label>
           {/* royalblue backgroundcolor */}
           <label>
             <input
+              checked={color === "royalblue"}
               className="form-check-input"
               style={{
                 marginLeft: "11px",
@@ -297,19 +305,37 @@ export const ModifyEvent = (props) => {
               type="radio"
               value="royalblue"
               {...register("color")} // Unique name attribute for backgroundcolor
+              onChange={(event) => setColor(event.target.value)}
             />
           </label>
-          {/* default backgroundcolor */}
+          {/* light green backgroundcolor */}
           <label>
             <input
+              checked={color === "#119790"}
               className="form-check-input"
               style={{
                 marginLeft: "13px",
-                backgroundColor: "#6495ED",
+                backgroundColor: "#119790",
               }}
               type="radio"
-              value="normal"
+              value="#119790"
               {...register("color")} // Unique name attribute for backgroundcolor
+              onChange={(event) => setColor(event.target.value)}
+            />
+          </label>
+          {/* ocean blue color */}
+          <label>
+            <input
+              checked={color === "#4f42b5"}
+              className="form-check-input"
+              style={{
+                marginLeft: "13px",
+                backgroundColor: "#4f42b5",
+              }}
+              type="radio"
+              value="#4f42b5"
+              {...register("color")} // Unique name attribute for backgroundcolor
+              onChange={(event) => setColor(event.target.value)}
             />
           </label>
           {errors.color?.message ? (

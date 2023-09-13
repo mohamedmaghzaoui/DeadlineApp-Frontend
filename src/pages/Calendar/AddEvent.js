@@ -174,9 +174,9 @@ export const AddEvent = (props) => {
             {/* red backgroundcolor */}
             <input
               className="form-check-input"
-              style={{ marginLeft: "5px", backgroundColor: "red" }}
+              style={{ marginLeft: "5px", backgroundColor: "#ea424b" }}
               type="radio"
-              value="red"
+              value="#ea424b"
               {...register("color")} // Unique name attribute for backgroundcolor
             />
           </label>
@@ -184,9 +184,9 @@ export const AddEvent = (props) => {
             {/* green backgroundcolor */}
             <input
               className="form-check-input"
-              style={{ marginLeft: "7px", backgroundColor: "green" }}
+              style={{ marginLeft: "7px", backgroundColor: "#109010" }}
               type="radio"
-              value="green"
+              value="#109010"
               {...register("color")} // Unique name attribute for backgroundcolor
             />
           </label>
@@ -194,9 +194,9 @@ export const AddEvent = (props) => {
           <label>
             <input
               className="form-check-input"
-              style={{ marginLeft: "9px", backgroundColor: "purple" }}
+              style={{ marginLeft: "9px", backgroundColor: "#9c51b6" }}
               type="radio"
-              value="purple"
+              value="#9c51b6"
               {...register("color")} // Unique name attribute for backgroundcolor
             />
           </label>
@@ -213,16 +213,30 @@ export const AddEvent = (props) => {
               {...register("color")} // Unique name attribute for backgroundcolor
             />
           </label>
-          {/* default backgroundcolor */}
+          {/* light green backgroundcolor */}
           <label>
             <input
               className="form-check-input"
               style={{
                 marginLeft: "13px",
-                backgroundColor: "#6495ED",
+                backgroundColor: "#119790",
               }}
               type="radio"
-              value="normal"
+              value="#119790"
+              {...register("color")} // Unique name attribute for backgroundcolor
+            />
+          </label>
+
+          {/* ocean blue color */}
+          <label>
+            <input
+              className="form-check-input"
+              style={{
+                marginLeft: "13px",
+                backgroundColor: "#4f42b5",
+              }}
+              type="radio"
+              value="#4f42b5"
               {...register("color")} // Unique name attribute for backgroundcolor
             />
           </label>
