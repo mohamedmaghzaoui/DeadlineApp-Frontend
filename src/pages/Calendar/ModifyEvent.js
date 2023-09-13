@@ -1,7 +1,7 @@
 //import exit icon
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTimes } from "@fortawesome/free-solid-svg-icons";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 import { useForm } from "react-hook-form";
 //for api
@@ -12,7 +12,7 @@ import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
 const { format } = require("date-fns");
 export const ModifyEvent = (props) => {
-  //props are refetch
+  //props are refetch hide and selected event
 
   /* validation schema using yup  */
 
@@ -35,7 +35,7 @@ export const ModifyEvent = (props) => {
     resolver: yupResolver(validation),
   });
   //get the selected event from calendar.js
-  const selectedEvent = props.selectedEvent; //this is only for title and color
+  const selectedEvent = props.selectedEvent; //this is  for title  color start and end
   const eventData = props.selectedEvent.extendedProps; //this is for all other attributes
   //useState event attributes to display them initialy then be able to change them
   const [title, setTitle] = useState(selectedEvent.title);
@@ -49,9 +49,39 @@ export const ModifyEvent = (props) => {
     format(new Date(selectedEvent.start), "yyyy-MM-dd")
   );
   //always minus one day for fullcalendar
-  let endDate = selectedEvent.end;
-  endDate.setDate(endDate.getDate() + -1);
+  let endDate;
+  if (selectedEvent.end) {
+    endDate = selectedEvent.end;
+    endDate.setDate(endDate.getDate() + -1);
+  } else {
+    endDate = selectedEvent.start;
+  }
+
   const [end, setEnd] = useState(format(new Date(endDate), "yyyy-MM-dd"));
+  const [statueMessage, setStatueMessage] = useState(""); //statue of event finished not finshed still going
+  //function to update the statue message by comparing current date and end Date
+  const updateStatueMessage = () => {
+    const currentDate = new Date(); // Current date
+    const endDateObj = new Date(endDate); // Convert end date from form to a Date object
+
+    if (
+      //get date year month and dat
+      endDateObj.getFullYear() === currentDate.getFullYear() &&
+      endDateObj.getMonth() === currentDate.getMonth() &&
+      endDateObj.getDate() === currentDate.getDate()
+    ) {
+      setStatueMessage("En cours");
+    } else if (endDateObj > currentDate) {
+      setStatueMessage("Pas terminé");
+    } else {
+      setStatueMessage("Terminé");
+    }
+  };
+  //update the statue once the endDate is cahge
+  useEffect(() => {
+    updateStatueMessage();
+  }, endDate);
+
   //function to delete an event
   const deleteEvent = (event) => {
     //prevent the default behaviour (submission) of the button
@@ -66,6 +96,7 @@ export const ModifyEvent = (props) => {
       })
       .catch((err) => console.error(err));
   };
+  //modify event
   const apiUrl = `http://localhost:3001/events/${selectedEvent.id}`;
   const checkSubmit = (data) => {
     console.log("Before Axios request");
@@ -100,7 +131,6 @@ export const ModifyEvent = (props) => {
       <form onSubmit={handleSubmit(checkSubmit)} className="input-form ">
         <h4>information de l'échéance</h4>
         {/* icon for exit*/}
-
         <FontAwesomeIcon
           onClick={() => props.hide(null)}
           style={{
@@ -115,22 +145,21 @@ export const ModifyEvent = (props) => {
           icon={faTimes}
           className="custom-icon"
         />
+        <p style={{ fontWeight: "bolder" }}>Statue: {("  ", statueMessage)}</p>
         {/* title input*/}
+        <span style={{ fontWeight: "bolder" }}>Titre :</span>
         <input
           value={title}
           type="text"
-          className="form-control"
+          className={`form-control ${title ? "filled" : ""}`}
           placeholder="titre"
           {...register("title")}
           onChange={(event) => setTitle(event.target.value)}
+          style={{
+            borderColor: errors.title && "red", // Apply the conditional style
+          }}
         />
-
-        {errors.title?.message ? (
-          <span style={{ color: "red" }}>{errors.title.message}</span>
-        ) : (
-          <br />
-        )}
-        {/* object input*/}
+        <span style={{ fontWeight: "bolder" }}>Objet :</span>
         <input
           value={object}
           type="text"
@@ -138,13 +167,13 @@ export const ModifyEvent = (props) => {
           placeholder="objet"
           {...register("object")}
           onChange={(event) => setObject(event.target.value)}
+          style={{
+            borderColor: errors.object && "red", // Apply the conditional style
+          }}
         />
-        {errors.object?.message ? (
-          <span style={{ color: "red" }}>{errors.object.message}</span>
-        ) : (
-          <br />
-        )}
+
         {/* client input*/}
+        <span style={{ fontWeight: "bolder" }}>Client :</span>
         <input
           value={client}
           type="text"
@@ -152,26 +181,25 @@ export const ModifyEvent = (props) => {
           placeholder="client"
           {...register("client")}
           onChange={(event) => setClient(event.target.value)}
+          style={{
+            borderColor: errors.client && "red", // Apply the conditional style
+          }}
         />
-        {errors.client?.message ? (
-          <span style={{ color: "red" }}>{errors.client.message}</span>
-        ) : (
-          <br />
-        )}
+
         {/* concerned person input*/}
+        <span style={{ fontWeight: "bolder" }}>Personne concerné :</span>
         <input
           value={concernedPerson}
           type="text"
+          style={{
+            borderColor: errors.concernedPerson && "red", // Apply the conditional style
+          }}
           className="form-control"
           placeholder="Personne Concerné"
           {...register("concernedPerson")}
           onChange={(event) => setConcernedPerson(event.target.value)}
         />
-        {errors.concernedPerson?.message ? (
-          <span style={{ color: "red" }}>{errors.concernedPerson.message}</span>
-        ) : (
-          <br />
-        )}
+
         {/* frequence inputs in radio */}
         <div className="frequence" style={{ display: "flex" }}>
           <label>Frequence</label>
@@ -230,6 +258,7 @@ export const ModifyEvent = (props) => {
           <label>
             {/* red backgroundcolor */}
             <input
+              defaultChecked
               className="form-check-input"
               style={{ marginLeft: "5px", backgroundColor: "red" }}
               type="radio"
@@ -291,7 +320,6 @@ export const ModifyEvent = (props) => {
             <br />
           )}
         </div>
-
         {/* start and end date inputs*/}
         {/*start input */}
         <label>

@@ -85,7 +85,7 @@ export const MyCalendar = () => {
       >
         ajouter un échéance
       </button>
-      {console.log(events)}
+
       {/* when clicked the add event form appear and pass the refrech as props */}
       {showInputForm && <AddEvent hide={setInputForm} refetch={refetch} />}
 

@@ -71,13 +71,13 @@ export const AddEvent = (props) => {
           className="custom-icon"
         />
         {/* title input*/}
+
         <input
           type="text"
           className="form-control"
           placeholder="titre"
           {...register("title")}
         />
-
         {errors.title?.message ? (
           <span style={{ color: "red" }}>{errors.title.message}</span>
         ) : (
@@ -234,7 +234,6 @@ export const AddEvent = (props) => {
             <br />
           )}
         </div>
-
         {/* start and end date inputs*/}
         <label>
           <span>
