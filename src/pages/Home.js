@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import calendarImage from "../img/calendarAgenda.png"; // Import the image
+import { Link } from "react-router-dom";
 
 export const Home = () => {
   const texts = [
@@ -54,13 +55,16 @@ export const Home = () => {
         sein de votre entreprise grâce à un agenda interactif <br />
         notifications par e-mail et codes couleurs
       </h5>
-      <button
-        style={{ marginLeft: "10%", marginTop: "2%" }}
-        type="button"
-        class="btn btn-outline-primary"
-      >
-        Acceder au calendrier &gt;
-      </button>
+      <Link to={"/calendrier"}>
+        <button
+          style={{ marginLeft: "10%", marginTop: "2%" }}
+          type="button"
+          class="btn btn-outline-primary"
+        >
+          Acceder au calendrier &gt;
+        </button>
+      </Link>
+
       <h2 style={{ marginTop: "3%", marginLeft: "4%" }}>
         Avec DeadlineHub vous pouvez{" "}
         <span style={{ color: "blue", fontWeight: "bold" }}>
@@ -78,6 +82,32 @@ export const Home = () => {
         alt="Calendar Agenda"
       />
       <p>hel</p>
+      {/* Footer Section */}
+      <footer
+        style={{
+          backgroundColor: "#f8f9fa",
+          padding: "20px",
+          textAlign: "center",
+        }}
+      >
+        <div className="container">
+          <div className="row">
+            <div className="col-md-4">
+              <h4>Contactez Moi</h4>
+              <p>Email: mohamedmaghzaoui53@gmail.com</p>
+              <p>Phone: +123-456-7890</p>
+            </div>
+            <div className="col-md-4">
+              <h4>Follow Us</h4>
+              {/* Add social media icons/links here */}
+            </div>
+            <div className="col-md-4">
+              <h4>Privacy Policy</h4>
+              {/* Add a link to your privacy policy page */}
+            </div>
+          </div>
+        </div>
+      </footer>
     </div>
   );
 };
