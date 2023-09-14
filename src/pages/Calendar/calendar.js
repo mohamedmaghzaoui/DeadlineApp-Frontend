@@ -3,6 +3,8 @@ import React, { useEffect, useState } from "react"; //react imports
 import FullCalendar from "@fullcalendar/react";
 import dayGridPlugin from "@fullcalendar/daygrid";
 import timeGridPlugin from "@fullcalendar/timegrid";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faSearch } from "@fortawesome/free-solid-svg-icons";
 import listPlugin from "@fullcalendar/list";
 import frLocale from "@fullcalendar/core/locales/fr";
 import "bootstrap/dist/css/bootstrap.min.css";
@@ -35,6 +37,9 @@ export const MyCalendar = () => {
   });
   //state to show the input for adding and event
   const [showInputForm, setInputForm] = useState(false);
+  //states for search input and filterd event
+  const [searchInput, setSearchInput] = useState("");
+  const [filteredEvents, setFilteredEvents] = useState(null);
   //state for current events
   const [events, setEvents] = useState([]);
   const [selectedEvent, setSelectedEvent] = useState(null); // Track the selected event
@@ -50,7 +55,7 @@ export const MyCalendar = () => {
         const startDate = new Date(event.start);
         const endDate = new Date(event.end);
 
-        // Add 1 day to the end date to work properly
+        // Add 1 day to the end date for fullcalendar  to work properly
         endDate.setDate(endDate.getDate() + 1);
 
         return {
@@ -62,7 +67,19 @@ export const MyCalendar = () => {
       setEvents(formattedEventList);
     }
   }, [eventList, isLoading, isError]);
-
+  useEffect(() => {
+    if (events) {
+      if (searchInput == "") {
+        setFilteredEvents(null);
+      } else {
+        const filteredEvents = events.filter((event) =>
+          event.title.toLowerCase().includes(searchInput.toLowerCase())
+        );
+        setFilteredEvents(filteredEvents);
+      }
+    }
+  });
+  //check for errors and loading
   if (isLoading) {
     return <h1>Loading...</h1>;
   }
@@ -74,6 +91,20 @@ export const MyCalendar = () => {
 
   return (
     <div className="container" style={{ width: "99%", color: "black" }}>
+      <div className="input-group">
+        <div className="form-outline">
+          <input
+            placeholder="chercher un echancier"
+            type="search"
+            id="form1"
+            className="form-control"
+            onChange={(event) => setSearchInput(event.target.value)}
+          />
+        </div>
+        <button type="button" className="btn btn-primary">
+          <FontAwesomeIcon icon={faSearch} />
+        </button>
+      </div>
       <br />
       {/* button to add events */}
       <button
@@ -85,6 +116,9 @@ export const MyCalendar = () => {
       >
         ajouter un échéance
       </button>
+      {/* search for event */}
+
+      <br />
 
       {/* when clicked the add event form appear and pass the refrech as props */}
       {showInputForm && <AddEvent hide={setInputForm} refetch={refetch} />}
@@ -92,7 +126,7 @@ export const MyCalendar = () => {
       <FullCalendar
         plugins={[dayGridPlugin, timeGridPlugin, listPlugin]}
         initialView="dayGridMonth"
-        events={events}
+        events={filteredEvents || events}
         eventClick={handelClick}
         height="600px"
         headerToolbar={{
