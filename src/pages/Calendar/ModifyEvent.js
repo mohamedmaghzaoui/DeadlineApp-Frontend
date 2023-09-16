@@ -24,7 +24,14 @@ export const ModifyEvent = (props) => {
     frequence: yup.string().required("La fréquence est requise"),
     color: yup.string().required("le couleur est requis"),
     start: yup.date().required("La date de début est requise").nullable(),
-    end: yup.date().required("La date de fin est requise").nullable(),
+    end: yup
+      .date()
+      .required("La date de fin est requise")
+      .nullable()
+      .min(
+        yup.ref("start"),
+        "La date de fin doit être supérieure ou égale à la date de début"
+      ),
   });
 
   const {
@@ -45,9 +52,17 @@ export const ModifyEvent = (props) => {
     eventData.concernedPerson
   );
   const [frequence, setFrequence] = useState(eventData.frequence);
+
   const [color, setColor] = useState(selectedEvent.backgroundColor);
+  const [recur, setRecur] = useState(eventData.recur);
+
+  if (recur) {
+    var startRecur = recur.dtstart;
+    var endRecur = recur.until;
+  }
+
   const [start, setStart] = useState(
-    format(new Date(selectedEvent.start), "yyyy-MM-dd")
+    recur ? startRecur : format(new Date(selectedEvent.start), "yyyy-MM-dd")
   );
   //always minus one day for fullcalendar
   let endDate;
@@ -58,7 +73,9 @@ export const ModifyEvent = (props) => {
     endDate = selectedEvent.start;
   }
 
-  const [end, setEnd] = useState(format(new Date(endDate), "yyyy-MM-dd"));
+  const [end, setEnd] = useState(
+    recur ? endRecur : format(new Date(endDate), "yyyy-MM-dd")
+  );
   const [statueMessage, setStatueMessage] = useState(""); //statue of event finished not finshed still going
   //function to update the statue message by comparing current date and end Date
   const updateStatueMessage = () => {
@@ -78,11 +95,14 @@ export const ModifyEvent = (props) => {
       setStatueMessage("Terminé");
     }
   };
+
   //update the statue once the endDate is cahge
   useEffect(() => {
     updateStatueMessage();
   }, []);
-  console.log(selectedEvent);
+  const [prevFrequence, setPrevFrequence] = useState(frequence); // State to store the previous frequence value
+
+  // Function to update previous frequence when frequence changes
 
   //function to delete an event
   const deleteEvent = (event) => {
@@ -91,31 +111,22 @@ export const ModifyEvent = (props) => {
     axios
       //passs the id in url
       .delete(`http://localhost:3001/events/${selectedEvent.id}`)
-      .then((res) => {
-        console.log(res);
-        props.hide(null); //hide the input form
-        props.refetch(); //refrech events
-      })
+      .then((res) => {})
       .catch((err) => console.error(err));
   };
   //modify event
   const apiUrl = `http://localhost:3001/events/${selectedEvent.id}`;
   const checkSubmit = (data) => {
-    console.log("Before Axios request");
-    console.log("form data:", data);
-
     const updatedData = {
       ...data,
       start: new Date(data.start).toISOString(),
       end: new Date(data.end).toISOString(),
     };
-    console.log("updated event=", updatedData);
 
     axios
       .put(apiUrl, updatedData)
       .then((response) => {
         console.error("After Axios request (Success)");
-        console.log("Response:", response);
       })
       .catch((err) => {
         console.error("After Axios request (Error)");
@@ -125,7 +136,7 @@ export const ModifyEvent = (props) => {
     setTimeout(() => {
       props.refetch();
       props.hide(null);
-    }, 200);
+    }, 300);
   };
 
   return (
@@ -201,58 +212,30 @@ export const ModifyEvent = (props) => {
           {...register("concernedPerson")}
           onChange={(event) => setConcernedPerson(event.target.value)}
         />
+        {/* frequency input*/}
 
-        {/* frequence inputs in radio */}
-        <div className="frequence" style={{ display: "flex" }}>
-          <label>Frequence</label>
-          <br />
-          <label className="form-check-label">
-            <input
-              checked={frequence === "yearly"}
-              className="form-check-input"
-              style={{ marginLeft: "5px" }}
-              type="radio"
-              value="yearly"
-              {...register("frequence")} // Unique name attribute for frequence
-              onChange={(event) => setFrequence(event.target.value)}
-            />
-            Annuel
-          </label>
-          <label
-            className="form-check-label"
-            style={{ position: "relative", left: "5%" }}
-          >
-            <input
-              checked={frequence === "monthly"}
-              className="form-check-input"
-              type="radio"
-              value="monthly"
+        <div className="form-group">
+          <label>Fréquence</label>
+          <div className="input-group">
+            <select
+              value={frequence}
+              className="form-select"
+              aria-label="Default select example"
               {...register("frequence")}
-              onChange={(event) => setFrequence(event.target.value)} // Unique name attribute for frequence
-            />
-            Mensuelle
-          </label>
-          <label
-            className="form-check-label"
-            style={{ position: "relative", left: "30px" }}
-          >
-            <input
-              checked={frequence === "weekly"}
-              className="form-check-input"
-              type="radio"
-              value="weekly"
-              {...register("frequence")} // Unique name attribute for frequence
-              name="frequence"
-              onChange={(event) => setFrequence(event.target.value)} // Add this
-            />
-            Hebdo
-          </label>
+              onChange={(event) => {
+                setPrevFrequence(frequence);
+                setFrequence(event.target.value);
+              }}
+            >
+              <option value="unique">Unique</option>
+              <option value="yearly">Annuel</option>
+              <option value="monthly">Mensuelle</option>
+              <option value="weekly">Hebdo</option>
+              <option value="daily">Chaque jour</option>
+            </select>
+          </div>
         </div>
-        {errors.frequence?.message ? (
-          <span style={{ color: "red" }}>{errors.frequence.message}</span>
-        ) : (
-          <br />
-        )}
+
         {/* backgroundcolors inputs in radio */}
         <div className="frequence" style={{ display: "flex" }}>
           <label>Couleur</label>
@@ -348,6 +331,7 @@ export const ModifyEvent = (props) => {
         </div>
         {/* start and end date inputs*/}
         {/*start input */}
+
         <label>
           <span>
             Commencé
@@ -356,7 +340,9 @@ export const ModifyEvent = (props) => {
               className="form-control"
               type="date"
               {...register("start")}
-              onChange={(event) => setStart(event.target.value)}
+              onChange={(event) => {
+                setStart(event.target.value);
+              }}
             />
           </span>
           {errors.start?.message ? (
@@ -389,7 +375,7 @@ export const ModifyEvent = (props) => {
                 display: "flex",
               }}
             >
-              {"data de  est requis"}
+              {"data de fin n'est pas correct"}
             </span>
           ) : (
             <br />

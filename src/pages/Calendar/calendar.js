@@ -3,6 +3,7 @@ import React, { useEffect, useState } from "react"; //react imports
 import FullCalendar from "@fullcalendar/react";
 import dayGridPlugin from "@fullcalendar/daygrid";
 import timeGridPlugin from "@fullcalendar/timegrid";
+import rrulePlugin from "@fullcalendar/rrule";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faSearch } from "@fortawesome/free-solid-svg-icons";
 import listPlugin from "@fullcalendar/list";
@@ -43,30 +44,79 @@ export const MyCalendar = () => {
   //state for current events
   const [events, setEvents] = useState([]);
   const [selectedEvent, setSelectedEvent] = useState(null); // Track the selected event
+
   //function for selected event
   const handelClick = (eventInfo) => {
     setSelectedEvent(eventInfo.event); // Set the selected event
   };
+  //wokr on the frequency
+  // ...
+
+  // Create a new array to store the final list of events
+
+  // ...
+  let rrule;
   useEffect(() => {
     if (eventList) {
-      // Only update events when data is available and there's no error
-      //change the format of date to work with full calendar
       const formattedEventList = eventList.map((event) => {
         const startDate = new Date(event.start);
         const endDate = new Date(event.end);
 
-        // Add 1 day to the end date for fullcalendar  to work properly
-        endDate.setDate(endDate.getDate() + 1);
+        // Add 1 day to the end date for FullCalendar to work properly
 
+        switch (event.frequence) {
+          case "daily":
+            rrule = {
+              freq: "daily",
+              interval: 1,
+              dtstart: format(startDate, "yyyy-MM-dd"),
+              until: format(endDate, "yyyy-MM-dd"),
+            };
+            break;
+          case "weekly":
+            rrule = {
+              freq: "weekly",
+              interval: 1,
+              dtstart: format(startDate, "yyyy-MM-dd"),
+              until: format(endDate, "yyyy-MM-dd"),
+            };
+            break;
+          case "monthly":
+            rrule = {
+              freq: "monthly",
+              interval: 1,
+              dtstart: format(startDate, "yyyy-MM-dd"),
+              until: format(endDate, "yyyy-MM-dd"),
+            };
+            break;
+          case "yearly":
+            rrule = {
+              freq: "yearly",
+              interval: 1,
+              dtstart: format(startDate, "yyyy-MM-dd"),
+              until: format(endDate, "yyyy-MM-dd"),
+            };
+            break;
+          default:
+            rrule = undefined;
+            break;
+        }
+        endDate.setDate(endDate.getDate() + 1);
         return {
           ...event,
-          start: format(startDate, "yyyy-MM-dd"), //new start format
-          end: format(endDate, "yyyy-MM-dd"), //new end format
+          rrule,
+          recur: rrule,
+          start: format(startDate, "yyyy-MM-dd"),
+          end: format(endDate, "yyyy-MM-dd"),
         };
       });
+
       setEvents(formattedEventList);
     }
-  }, [eventList, isLoading, isError]);
+  }, [eventList]);
+
+  // ...
+
   useEffect(() => {
     if (events) {
       if (searchInput == "") {
@@ -78,7 +128,7 @@ export const MyCalendar = () => {
         setFilteredEvents(filteredEvents);
       }
     }
-  });
+  }, [events, searchInput]);
   //check for errors and loading
   if (isLoading) {
     return <h1>Loading...</h1>;
@@ -88,7 +138,7 @@ export const MyCalendar = () => {
   if (isError) {
     return <h1>Error loading data</h1>;
   }
-
+  console.log("Events:", events);
   return (
     <div className="container" style={{ width: "99%", color: "black" }}>
       <div className="input-group">
@@ -124,7 +174,7 @@ export const MyCalendar = () => {
       {showInputForm && <AddEvent hide={setInputForm} refetch={refetch} />}
 
       <FullCalendar
-        plugins={[dayGridPlugin, timeGridPlugin, listPlugin]}
+        plugins={[rrulePlugin, dayGridPlugin, timeGridPlugin, listPlugin]}
         initialView="dayGridMonth"
         events={filteredEvents || events}
         eventClick={handelClick}

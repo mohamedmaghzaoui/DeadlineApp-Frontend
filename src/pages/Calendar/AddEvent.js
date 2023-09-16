@@ -1,8 +1,10 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useForm } from "react-hook-form";
 import { faTimes } from "@fortawesome/free-solid-svg-icons";
+import { faCaretDown } from "@fortawesome/free-solid-svg-icons";
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
+
 import axios from "axios";
 export const AddEvent = (props) => {
   {
@@ -119,53 +121,24 @@ export const AddEvent = (props) => {
         ) : (
           <br />
         )}
-        {/* frequence inputs in radio */}
-        <div className="frequence" style={{ display: "flex" }}>
-          <label>Frequence</label>
-          <br />
-          <label className="form-check-label">
-            <input
-              className="form-check-input"
-              style={{ marginLeft: "5px" }}
-              type="radio"
-              value="yearly"
-              {...register("frequence")} // Unique name attribute for frequence
-              name="frequence" // Add this
-            />
-            Annuel
-          </label>
-          <label
-            className="form-check-label"
-            style={{ position: "relative", left: "5%" }}
-          >
-            <input
-              className="form-check-input"
-              type="radio"
-              value="monthly"
-              {...register("frequence")} // Unique name attribute for frequence
-              name="frequence" // Add this
-            />
-            Mensuelle
-          </label>
-          <label
-            className="form-check-label"
-            style={{ position: "relative", left: "30px" }}
-          >
-            <input
-              className="form-check-input"
-              type="radio"
-              value="weekly"
-              {...register("frequence")} // Unique name attribute for frequence
-              name="frequence" // Add this
-            />
-            Hebdo
-          </label>
+        {/* frequence input as a select dropdown */}
+        <div className="form-group">
+          <label>Fréquence</label>
+          <div className="input-group">
+            <select
+              class="form-select"
+              aria-label="Default select example"
+              {...register("frequence")}
+            >
+              <option value="unique">Unique</option>
+              <option value="yearly">Annuel</option>
+              <option value="monthly">Mensuelle</option>
+              <option value="weekly">Hebdo</option>
+              <option value="daily">Chaque jour</option>
+            </select>
+          </div>
         </div>
-        {errors.frequence?.message ? (
-          <span style={{ color: "red" }}>{errors.frequence.message}</span>
-        ) : (
-          <br />
-        )}
+
         {/* backgroundcolors inputs in radio */}
         <div className="frequence" style={{ display: "flex" }}>
           <label>Couleur</label>
