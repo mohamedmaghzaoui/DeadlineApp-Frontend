@@ -111,7 +111,10 @@ export const ModifyEvent = (props) => {
     axios
       //passs the id in url
       .delete(`http://localhost:3001/events/${selectedEvent.id}`)
-      .then((res) => {})
+      .then((res) => {
+        props.refetch();
+        props.hide(null);
+      })
       .catch((err) => console.error(err));
   };
   //modify event

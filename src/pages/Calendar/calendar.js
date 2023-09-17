@@ -143,6 +143,7 @@ export const MyCalendar = () => {
     <div className="container" style={{ width: "99%", color: "black" }}>
       <div className="input-group">
         <div className="form-outline">
+          {/* search for event */}
           <input
             placeholder="chercher un echancier"
             type="search"
@@ -166,7 +167,6 @@ export const MyCalendar = () => {
       >
         ajouter un échéance
       </button>
-      {/* search for event */}
 
       <br />
 

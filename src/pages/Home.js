@@ -1,7 +1,12 @@
 import React, { useState, useEffect } from "react";
-import calendarImage from "../img/calendarAgenda.png"; // Import the image
+import agenda from "../img/calendar.png"; // Import the image
+import add from "../img/add.png";
+import addInformation from "../img/addInformation.png";
+import modify from "../img/information.png";
+import "../Css/home.css";
 
 import { Link } from "react-router-dom";
+import { text } from "@fortawesome/fontawesome-svg-core";
 
 export const Home = () => {
   const texts = [
@@ -9,28 +14,107 @@ export const Home = () => {
     "Optimisez votre flux de travail",
     "Restez au sommet de vos projets",
   ];
+  const calendarImage = (
+    <img
+      style={{
+        width: "30%",
+        height: "350px",
+        marginLeft: "60%",
+        marginTop: "-28%",
+      }}
+      src={agenda}
+      alt="Calendar Agenda"
+    />
+  );
+  const addImage = (
+    <img
+      style={{
+        width: "18%",
+        height: "18%",
+        marginLeft: "70%",
+        marginTop: "-28%",
+      }}
+      src={add}
+      alt="Calendar Agenda"
+    />
+  );
+  const addImageInformation = (
+    <img
+      style={{
+        width: "18%",
+        height: "450px",
+        marginLeft: "70%",
+        marginTop: "-28%",
+      }}
+      src={addInformation}
+      alt="Calendar Agenda"
+    />
+  );
+  const modifyInformation = (
+    <img
+      style={{
+        width: "18%",
+        height: "450px",
+        marginLeft: "70%",
+        marginTop: "-28%",
+      }}
+      src={modify}
+      alt="Calendar Agenda"
+    />
+  );
+  const images = [calendarImage, addImageInformation, modifyInformation];
+  const [currentImageIndex, setCurrentImageIndex] = useState(0);
+  const [animationClass, setAnimationClass] = useState("");
 
   const [currentTextIndex, setCurrentTextIndex] = useState(0);
   const [currentText, setCurrentText] = useState("");
   const [typingFinished, setTypingFinished] = useState(false);
 
   useEffect(() => {
-    if (currentText === texts[currentTextIndex]) {
+    const animateImages = () => {
+      // Animate the current image out
+      setAnimationClass("slide-up-and-fade-out");
+
+      // Wait for the animation to complete
       setTimeout(() => {
-        setCurrentText("");
-        setCurrentTextIndex((prevIndex) => (prevIndex + 1) % texts.length);
-      }, 1000); // Delay between texts
-    } else {
-      if (currentText.length < texts[currentTextIndex].length) {
+        // Change to the next image
+        setCurrentImageIndex((prevIndex) => (prevIndex + 1) % images.length);
+
+        // Animate the next image in
+        setAnimationClass("slide-down");
+      }, 800); // Adjust the timing as needed
+    };
+
+    // Set up the interval for image change
+    const imageIntervalId = setInterval(animateImages, 2000); // Change image every 3 seconds
+
+    return () => clearInterval(imageIntervalId);
+  }, []);
+
+  useEffect(() => {
+    const animateText = () => {
+      if (currentText === texts[currentTextIndex]) {
         setTimeout(() => {
-          setCurrentText((prevText) =>
-            texts[currentTextIndex].substring(0, prevText.length + 1)
-          );
-        }, 100); // Delay between typing each character
+          setCurrentText("");
+          setCurrentTextIndex((prevIndex) => (prevIndex + 1) % texts.length);
+        }, 100); // Delay between texts
       } else {
-        setTypingFinished(true);
+        if (currentText.length < texts[currentTextIndex].length) {
+          setTimeout(() => {
+            setCurrentText((prevText) =>
+              texts[currentTextIndex].substring(0, prevText.length + 1)
+            );
+          }, 50); // Delay between typing each character
+        } else {
+          setTypingFinished(true);
+        }
       }
-    }
+    };
+
+    // Set up the interval for text animation
+    const textIntervalId = setInterval(animateText, 110); // Change text every 2.5 seconds
+
+    return () => clearInterval(textIntervalId);
   }, [currentText, currentTextIndex, texts]);
 
   return (
@@ -72,17 +156,7 @@ export const Home = () => {
           {typingFinished ? texts[currentTextIndex] : currentText}
         </span>{" "}
       </h2>
-      <img
-        style={{
-          width: "35%",
-          height: "35%",
-          marginLeft: "60%",
-          marginTop: "-25%",
-        }}
-        src={calendarImage}
-        alt="Calendar Agenda"
-      />
-      <p>hel</p>
+      <div className={animationClass}>{images[currentImageIndex]}</div>
       {/* Footer Section */}
       <footer
         style={{
@@ -93,18 +167,12 @@ export const Home = () => {
       >
         <div className="container">
           <div className="row">
+            <div className="col-md-4"></div>
             <div className="col-md-4">
               <h4>Contactez Moi</h4>
               <p>Email: mohamedmaghzaoui53@gmail.com</p>
               <p>Phone: +123-456-7890</p>
-            </div>
-            <div className="col-md-4">
-              <h4>Follow Us</h4>
               {/* Add social media icons/links here */}
-            </div>
-            <div className="col-md-4">
-              <h4>Privacy Policy</h4>
-              {/* Add a link to your privacy policy page */}
             </div>
           </div>
         </div>
