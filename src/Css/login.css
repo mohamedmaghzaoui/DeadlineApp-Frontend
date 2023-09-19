@@ -1,0 +1,27 @@
+.login {
+  text-align: center;
+}
+.form-control {
+  width: 40%;
+  height: 45px;
+}
+.form-select {
+  width: 40%;
+  height: 45px;
+}
+#title {
+  font-size: 30px;
+  font-weight: bold;
+}
+.form-inline {
+  margin-left: 40%;
+}
+#role {
+  margin-right: 130%;
+}
+#submit {
+  font-size: 20px;
+  font-weight: bolder;
+  margin-right: 60%;
+  width: 40%;
+}

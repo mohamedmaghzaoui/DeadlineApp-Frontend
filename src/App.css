@@ -19,3 +19,8 @@
   max-width: 400px;
   width: 100%;
 }
+#error {
+  margin-top: 2%;
+  margin-right: 60%;
+  color: red;
+}

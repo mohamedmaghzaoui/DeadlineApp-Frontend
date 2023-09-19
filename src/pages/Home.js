@@ -6,7 +6,6 @@ import modify from "../img/information.png";
 import "../Css/home.css";
 
 import { Link } from "react-router-dom";
-import { text } from "@fortawesome/fontawesome-svg-core";
 
 export const Home = () => {
   const texts = [
@@ -86,7 +85,7 @@ export const Home = () => {
     };
 
     // Set up the interval for image change
-    const imageIntervalId = setInterval(animateImages, 2000); // Change image every 3 seconds
+    const imageIntervalId = setInterval(animateImages, 2500); // Change image every 3 seconds
 
     return () => clearInterval(imageIntervalId);
   }, []);
@@ -112,7 +111,7 @@ export const Home = () => {
     };
 
     // Set up the interval for text animation
-    const textIntervalId = setInterval(animateText, 110); // Change text every 2.5 seconds
+    const textIntervalId = setInterval(animateText, 90); // Change text every 2.5 seconds
 
     return () => clearInterval(textIntervalId);
   }, [currentText, currentTextIndex, texts]);
