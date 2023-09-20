@@ -1,7 +1,12 @@
 .login {
+  position: relative;
   text-align: center;
 }
-.form-control {
+#password {
+  width: 40%;
+  height: 45px;
+}
+#email {
   width: 40%;
   height: 45px;
 }
@@ -24,4 +29,10 @@
   font-weight: bolder;
   margin-right: 60%;
   width: 40%;
+}
+#icon {
+  position: absolute;
+  cursor: pointer;
+  top: 40%;
+  right: 37%;
 }

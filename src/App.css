@@ -1,3 +1,6 @@
+body {
+  user-select: none;
+}
 .overlay {
   position: fixed;
   top: 0;

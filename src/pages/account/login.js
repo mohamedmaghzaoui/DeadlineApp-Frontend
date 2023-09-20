@@ -5,6 +5,8 @@ import * as yup from "yup";
 import "../../Css/login.css";
 import { useQuery } from "react-query";
 import { yupResolver } from "@hookform/resolvers/yup";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faEye, faEyeSlash, faL } from "@fortawesome/free-solid-svg-icons";
 export const Login = () => {
   const validation = yup.object().shape({
     email: yup.string().required(),
@@ -26,6 +28,7 @@ export const Login = () => {
   const checksubmit = (data) => {
     console.log(data);
   };
+  const [showPassword, setShowPassword] = useState(false);
   //text typing effet and animation
   const [currentTextIndex, setCurrentTextIndex] = useState(0);
   const [currentText, setCurrentText] = useState("");
@@ -74,16 +77,24 @@ export const Login = () => {
               {...register("email")}
               placeholder="E-mail"
               type="email"
+              id="email"
               className="form-control"
             />
             <br />
             <input
+              id="password"
               {...register("password")}
               name="password"
               placeholder="Mot de passe"
-              type="password"
+              type={showPassword == true ? "name" : "password"}
               className="form-control"
             />
+            <span onClick={() => setShowPassword(!showPassword)} id="icon">
+              <FontAwesomeIcon
+                icon={showPassword == true ? faEye : faEyeSlash}
+              />
+            </span>
+
             <br />
             <label id="role">Role</label>
             <select className="form-select" {...register("role")}>
