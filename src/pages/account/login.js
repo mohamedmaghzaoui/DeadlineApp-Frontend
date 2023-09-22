@@ -1,3 +1,5 @@
+import { useNavigate } from "react-router-dom";
+
 import axios from "axios"; //form managing http requestd
 import { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
@@ -7,7 +9,10 @@ import { useQuery } from "react-query";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEye, faEyeSlash, faL } from "@fortawesome/free-solid-svg-icons";
+
 export const Login = () => {
+  const navigate = useNavigate();
+
   const validation = yup.object().shape({
     email: yup.string().required(),
     password: yup.string().required(),
@@ -25,9 +30,26 @@ export const Login = () => {
     "Optimisez votre flux de travail",
     "Restez au sommet de vos projets",
   ];
-  const checksubmit = (data) => {
-    console.log(data);
+  const url = "http://localhost:3001/users/login";
+
+  const checksubmit = (userData) => {
+    axios
+      .post(url, userData)
+      .then((res) => {
+        const token = res.data;
+        sessionStorage.setItem("token", token);
+        console.log(token);
+        setFormEroor("");
+        navigate("/calendrier");
+      })
+      .catch((err) => {
+        console.log(err.response.data.error);
+        err.response.data.error == "User does not exist"
+          ? setFormEroor("l'utilisateur n'existe pas")
+          : setFormEroor("mot de passe invalide");
+      });
   };
+  const [formEroor, setFormEroor] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   //text typing effet and animation
   const [currentTextIndex, setCurrentTextIndex] = useState(0);
@@ -114,13 +136,16 @@ export const Login = () => {
             className="btn btn-primary"
           />
           <br />
-          {(errors.email?.message || errors.password?.message) && (
-            <p id="error">
-              Veuillez remplir votre e-mail et votre mot de passe.
-            </p>
-          )}
         </form>
       </div>
+      {(errors.email?.message || errors.password?.message) && (
+        <pre id="formError">
+          Veuillez remplir votre e-mail et votre mot de passe.
+        </pre>
+      )}
+      {formEroor && !errors.email?.message && !errors.password?.message && (
+        <pre id="formError2">{formEroor}</pre>
+      )}
     </div>
   );
 };

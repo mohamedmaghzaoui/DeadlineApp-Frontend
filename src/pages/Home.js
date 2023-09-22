@@ -61,6 +61,7 @@ export const Home = () => {
       alt="Calendar Agenda"
     />
   );
+
   const images = [calendarImage, addImageInformation, modifyInformation];
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [animationClass, setAnimationClass] = useState("");

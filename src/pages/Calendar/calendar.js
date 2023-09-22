@@ -36,6 +36,7 @@ export const MyCalendar = () => {
       .then((res) => res.data)
       .catch((err) => console.error(err));
   });
+  console.log(eventList);
   //state to show the input for adding and event
   const [showInputForm, setInputForm] = useState(false);
   //states for search input and filterd event

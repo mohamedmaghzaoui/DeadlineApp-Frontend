@@ -34,22 +34,15 @@
   margin-right: 60%;
   width: 40%;
 }
-#icon {
+#icon2 {
   user-select: none;
   position: absolute;
   cursor: pointer;
-  top: 40%;
+  top: 50%;
   right: 37%;
 }
-#formError {
-  color: red;
+#error {
   font-weight: 550;
-  margin-left: 39%;
-  margin-top: 1%;
-}
-#formError2 {
-  color: red;
-  font-weight: 550;
-  margin-left: 39%;
-  margin-top: 1%;
+  position: absolute;
+  left: 43%;
 }
