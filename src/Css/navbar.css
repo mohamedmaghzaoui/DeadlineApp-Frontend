@@ -42,18 +42,21 @@ img {
   position: relative;
   font-size: larger;
   display: flex;
-  margin-left: 80%;
+  margin-left: 30%;
   justify-content: space-between;
 }
 #login {
-  margin-left: 100%;
-  height: 70%;
+  position: absolute;
+  left: 250px;
+
+  height: 120%;
   font-size: 18px;
   font-weight: bolder;
 }
 #admin {
-  height: 70%;
-  position: absolute;
+  margin-top: 5%;
+  height: 60%;
+  margin-left: 80%;
   right: 40%;
 }
 

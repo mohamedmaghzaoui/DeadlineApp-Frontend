@@ -40,15 +40,19 @@ export const Login = () => {
         sessionStorage.setItem("token", token);
         console.log(token);
         setFormEroor("");
+
         navigate("/calendrier");
+        window.location.reload();
       })
       .catch((err) => {
         console.log(err.response.data.error);
         err.response.data.error == "User does not exist"
           ? setFormEroor("l'utilisateur n'existe pas")
           : setFormEroor("mot de passe invalide");
+        setShowFormError(true);
       });
   };
+  const [showFormError, setShowFormError] = useState(false);
   const [formEroor, setFormEroor] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   //text typing effet and animation
@@ -101,6 +105,7 @@ export const Login = () => {
               type="email"
               id="email"
               className="form-control"
+              onChange={() => setFormEroor(false)}
             />
             <br />
             <input
@@ -110,6 +115,7 @@ export const Login = () => {
               placeholder="Mot de passe"
               type={showPassword == true ? "name" : "password"}
               className="form-control"
+              onChange={() => setFormEroor(false)}
             />
             <span onClick={() => setShowPassword(!showPassword)} id="icon">
               <FontAwesomeIcon
@@ -138,13 +144,14 @@ export const Login = () => {
           <br />
         </form>
       </div>
-      {(errors.email?.message || errors.password?.message) && (
+      {errors.email?.message || errors.password?.message ? (
         <pre id="formError">
           Veuillez remplir votre e-mail et votre mot de passe.
         </pre>
-      )}
-      {formEroor && !errors.email?.message && !errors.password?.message && (
-        <pre id="formError2">{formEroor}</pre>
+      ) : (
+        showFormError && (
+          <pre id="formError2">mot de passe ou email invalide</pre>
+        )
       )}
     </div>
   );
