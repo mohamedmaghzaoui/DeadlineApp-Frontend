@@ -1,6 +1,17 @@
+import axios from "axios";
+
 export const UsersComponent = (props) => {
   if (props) {
     const users = props.users;
+    const Delete = (userId) => {
+      const url = `https://deadlineapp-backend.onrender.com/users/register${userId}`;
+      axios
+        .delete(url, {
+          headers: { token: sessionStorage.getItem("token") },
+        })
+        .then(() => props.refetch());
+    };
+
     return (
       <div>
         <h1>Liste des utilisateur</h1>
@@ -12,7 +23,12 @@ export const UsersComponent = (props) => {
                   <h6>Nom: {(" ", user.name)}</h6>
                   <h6>E-mail: {(" ", user.email)}</h6>
                   <h6>Role: {user.role}</h6>
-                  <button className="btn btn-danger">supprimer</button>
+                  <button
+                    onClick={() => Delete(user.id)}
+                    className="btn btn-danger"
+                  >
+                    supprimer
+                  </button>
                 </li>
               </ul>
             </div>

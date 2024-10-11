@@ -29,7 +29,7 @@ export const AddEvent = (props) => {
     resolver: yupResolver(validation),
   });
   //event api url
-  const url = "http://localhost:3001/events";
+  const url = "https://deadlineapp-backend.onrender.com/events";
 
   const ckeckSubmit = (data) => {
     console.log("data:", data.start);
@@ -44,7 +44,9 @@ export const AddEvent = (props) => {
 
     //use axios post request to send data to mysql db
     axios
-      .post(url, formattedData)
+      .post(url, formattedData, {
+        headers: { token: sessionStorage.getItem("token") },
+      })
       .then((res) => {
         console.log("event added");
         props.refetch();
@@ -56,7 +58,7 @@ export const AddEvent = (props) => {
   return (
     <div className="overlay">
       <form onSubmit={handleSubmit(ckeckSubmit)} className="input-form ">
-        <h4>Ajouter un échéance</h4>
+        <h4>Ajouter une échéance</h4>
         {/* icon to exit*/}
         <FontAwesomeIcon
           onClick={() => props.hide(false)}
@@ -244,7 +246,7 @@ export const AddEvent = (props) => {
             <br />
           )}
           <span>
-            Termine
+            Terminé
             <input className="form-control" type="date" {...register("end")} />
           </span>
           {errors.end?.message ? (

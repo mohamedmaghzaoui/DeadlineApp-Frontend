@@ -4,10 +4,10 @@ import FullCalendar from "@fullcalendar/react";
 import dayGridPlugin from "@fullcalendar/daygrid";
 import timeGridPlugin from "@fullcalendar/timegrid";
 import rrulePlugin from "@fullcalendar/rrule";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faSearch } from "@fortawesome/free-solid-svg-icons";
 import listPlugin from "@fullcalendar/list";
 import frLocale from "@fullcalendar/core/locales/fr";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faSearch } from "@fortawesome/free-solid-svg-icons";
 import "bootstrap/dist/css/bootstrap.min.css";
 //addEvent and modify Event components
 import { AddEvent } from "./AddEvent";
@@ -24,7 +24,7 @@ const dayCellContent = (args) => {
 //fetch data from api event endpoint using axios
 
 export const MyCalendar = () => {
-  const url = "http://localhost:3001/events";
+  const url = "https://deadlineapp-backend.onrender.com/events";
   const {
     data: eventList,
     isLoading,
@@ -32,7 +32,9 @@ export const MyCalendar = () => {
     refetch, //used to automaticly fetch data when adding new event
   } = useQuery(["eventList"], () => {
     return axios
-      .get(url)
+      .get(url, {
+        headers: { token: sessionStorage.getItem("token") },
+      })
       .then((res) => res.data)
       .catch((err) => console.error(err));
   });
@@ -166,7 +168,7 @@ export const MyCalendar = () => {
         className="btn btn-primary"
         id="add"
       >
-        ajouter un échéance
+        Ajouter un échéance
       </button>
 
       <br />

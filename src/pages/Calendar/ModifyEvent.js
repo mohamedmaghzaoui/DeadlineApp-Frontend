@@ -110,7 +110,9 @@ export const ModifyEvent = (props) => {
     event.preventDefault();
     axios
       //passs the id in url
-      .delete(`http://localhost:3001/events/${selectedEvent.id}`)
+      .delete(`http://localhost:3001/events/${selectedEvent.id}`, {
+        headers: { token: sessionStorage.getItem("token") },
+      })
       .then((res) => {
         props.refetch();
         props.hide(null);
@@ -127,7 +129,9 @@ export const ModifyEvent = (props) => {
     };
 
     axios
-      .put(apiUrl, updatedData)
+      .put(apiUrl, updatedData, {
+        headers: { token: sessionStorage.getItem("token") },
+      })
       .then((response) => {
         console.error("After Axios request (Success)");
       })
@@ -145,7 +149,7 @@ export const ModifyEvent = (props) => {
   return (
     <div className="overlay">
       <form onSubmit={handleSubmit(checkSubmit)} className="input-form ">
-        <h4>information de l'échéance</h4>
+        <h4>Information sur l'échéance</h4>
         {/* icon for exit*/}
         <FontAwesomeIcon
           onClick={() => props.hide(null)}
@@ -161,7 +165,7 @@ export const ModifyEvent = (props) => {
           icon={faTimes}
           className="custom-icon"
         />
-        <p style={{ fontWeight: "bolder" }}>Statue: {("  ", statueMessage)}</p>
+        <p style={{ fontWeight: "bolder" }}>Statut: {("  ", statueMessage)}</p>
         {/* title input*/}
         <span style={{ fontWeight: "bolder" }}>Titre :</span>
         <input
@@ -362,7 +366,7 @@ export const ModifyEvent = (props) => {
           )}
           {/*end input */}
           <span>
-            Termine
+            Terminé
             <input
               value={end}
               className="form-control"

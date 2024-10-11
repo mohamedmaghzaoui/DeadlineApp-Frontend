@@ -1,6 +1,6 @@
 import React from "react";
 import { Navigate, Route } from "react-router-dom";
-import jwt_decode from "jwt-decode"; // Import the jwt-decode library
+import jwt_decode from "jwt-decode"; // Import the jwt-decode library to decode token
 
 // Function to get the user's role from the token
 const getUserRoleFromToken = () => {

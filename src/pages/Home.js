@@ -149,7 +149,7 @@ export const Home = () => {
           Acceder au calendrier &gt;
         </button>
       </Link>
-
+      <br />
       <h2 style={{ marginTop: "3%", marginLeft: "4%" }}>
         Avec DeadlineHub vous pouvez{" "}
         <span style={{ color: "blue", fontWeight: "bold" }}>

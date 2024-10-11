@@ -23,7 +23,7 @@ export const Admin = () => {
     resolver: yupResolver(validation),
   });
 
-  const url = "http://localhost:3001/users/register";
+  const url = "https://deadlineapp-backend.onrender.com/users/register";
   const {
     data: userList,
     refetch,
@@ -40,7 +40,9 @@ export const Admin = () => {
   const checksubmit = (userData) => {
     console.log(userData);
     axios
-      .post(url, userData)
+      .post(url, userData, {
+        headers: { token: sessionStorage.getItem("token") },
+      })
       .then((res) => {
         console.log("user added");
         refetch();
@@ -123,7 +125,9 @@ export const Admin = () => {
         )}
       </div>
       {console.log(userList.data.error)}
-      {!userList.data.error && <UsersComponent users={userList.data} />}
+      {!userList.data.error && (
+        <UsersComponent refetch={refetch} users={userList.data} />
+      )}
     </div>
   );
 };

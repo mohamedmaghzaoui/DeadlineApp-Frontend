@@ -1,27 +1,28 @@
-import { MyCalendar } from "./pages/Calendar/calendar";
-import { Home } from "./pages/Home";
-import { Navbar } from "./pages/navbar";
+import { MyCalendar } from "./pages/Calendar/calendar"; //calendar component
+import { Home } from "./pages/Home"; //HomePage component
+import { Navbar } from "./pages/navbar"; //navbar component
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import "./App.css";
 import { ProtectedRoute } from "./pages/ProtectedRoute";
 
-import { Login } from "./pages/account/login";
-import { Admin } from "./pages/account/admin";
+import { Login } from "./pages/account/login"; //login component
+import { Admin } from "./pages/account/admin"; //admin component
 
 import { QueryClient, QueryClientProvider } from "react-query";
 
 function App() {
   const client = new QueryClient();
   return (
-    <div>
+    <div className="">
       <QueryClientProvider client={client}>
         <Router>
           <Navbar />
           <Routes>
+            {/* home*/}
             <Route path="/" element={<Home />} />
-
+            {/*login */}
             <Route path="/connecter" element={<Login />} />
-
+            {/*calendar and use protected route for only users of employer route */}
             <Route
               path="/Calendrier"
               element={
@@ -31,6 +32,7 @@ function App() {
                 />
               }
             />
+            {/*admin and use protected route for only user with admin role */}
             <Route
               path="/admin"
               element={

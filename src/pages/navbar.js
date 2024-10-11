@@ -1,9 +1,8 @@
 import { Link } from "react-router-dom";
 import "../Css/navbar.css";
 import { FaBars } from "react-icons/fa";
-import { useRef, useState } from "react";
-import jwt_decode from "jwt-decode";
-import { is } from "css-select";
+import { useState } from "react";
+import jwt_decode from "jwt-decode"; //decode token
 export const Navbar = () => {
   const getDataFromToken = () => {
     const token = sessionStorage.getItem("token");
